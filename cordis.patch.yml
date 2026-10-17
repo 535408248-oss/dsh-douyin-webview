@@ -1,0 +1,21 @@
+# dsh-douyin-webview bundle layer: a profile gets this row by listing the
+# package in `dsh.profile.bundles`. A profile-level patch can still disable the
+# row by id.
+#
+# The row mounts an intentionally empty Host half (lib/index.js). The feature is
+# entirely client-side: the sidebar foot gets a 抖音 button, and pressing it
+# mounts a real Electron <webview> into a fixed bottom-left panel, using the
+# Desktop guest lease from `dshDesktop.browser.acquire()`.
+#
+# Why the guest lease and not an iframe: douyin.com answers with
+# `X-Frame-Options: DENY` and a CSP `frame-ancestors` list that does not include
+# 127.0.0.1, so an iframe is rejected outright. A webview is a separate renderer
+# guest, which `frame-ancestors` cannot reach.
+#
+# The panel is only usable in the Electron window (`dsh-app://app`), because the
+# preload bridge `dshDesktop` is injected only there. In a browser tab the button
+# still appears and the panel explains why it cannot work.
+
+- insert:
+    - id: dsh-douyin-webview
+      name: dsh-douyin-webview
